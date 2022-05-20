@@ -119,7 +119,7 @@ Khai báo hàm gồm có : từ khóa function , tên hàm, tham số truyền v
 
 Lưu ý về đặt lên hàm :
 
-- cũng giống như đặt tên biến đã giới thiệu trước đây, ta chỉ có thể sử dụng : a-z, A-z, 0-9, %, \_ để đặt tên hàm .
+- cũng giống như đặt tên biến đã giới thiệu trước đây, ta chỉ có thể sử dụng : a-z, A-z, 0-9, $, \_ để đặt tên hàm .
 
 - với các số 0 đến 9 thì không dược viết ở đầu tên hàm --> sẽ báo lỗi ngay . Ngoài ra nên đặt tên hàm theo dạng camelCase và tên hàm nên mô tả đúng với chức năng mà hàm sẽ làm để dể đọc dể hiểu code.
 
