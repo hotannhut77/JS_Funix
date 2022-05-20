@@ -365,7 +365,7 @@ console.log(newLength);
   Để xóa bỏ 1 phần tử ở đầu mảng và trả về phần tử bin xóa đi ấy
 
 - Phương thức `indexof`
-  Tra về vị trí của 1 phần tử trong array
+  Trả về vị trí của 1 phần tử trong array, nếu không có phần tử đó trong array thì sẽ return -1
 
 - Phương thứ `includes`
   Trả về true / false : true nếu mảng có chứa phần tử , ngược lại không chứa thì trả về false
