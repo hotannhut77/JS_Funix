@@ -364,7 +364,7 @@ console.log("Tổng của các số có trong mảng là : " + sum);
 ==> Câu lệnh break
 Break được dùng để dừng lại hoàn toàn vòng lặp
 
-<img width = "400px" src = "https://laptrinh.vn/uploads/images/gallery/2019-10/break_statement_flowchart_diagram.png">
+<img src = "https://laptrinh.vn/uploads/images/gallery/2019-10/break_statement_flowchart_diagram.png">
 <br>
 <br>
 VD:
