@@ -130,22 +130,25 @@ console.log("số tuổi là : " + age);
 
 // giới thiệu về array
 
-// const numbers = [20, 30, 40, 50, 60];
-// console.log(numbers);
-// console.log(numbers[0]);
+const numbers = [20, 30, 40, 50, 60];
+console.log(numbers);
+console.log(numbers[0]);
 
-// const lengthArr = numbers.length;
-// console.log(lengthArr);
+const lengthArr = numbers.length;
+console.log(lengthArr);
 
-// const myArray = ["Hello", 10, 20, "JS", 12.34];
-// console.log(myArray);
-// console.log(myArray.length);
+const myArray = ["Hello", 10, 20, "JS", 12.34];
+console.log(myArray);
+console.log(myArray.length);
 
-// // tiến hành thêm 2 phần tử mới vào
-// // cuối mảng và trả về độ dài mới của mảng
-// let newLength = myArray.push("ok", 100);
-// console.log(myArray);
-// console.log(newLength);
+// tiến hành thêm 2 phần tử mới vào
+// cuối mảng và trả về độ dài mới của mảng
+let newLength = myArray.push("ok", 100);
+console.log(myArray);
+console.log(newLength);
 
-// console.log(myArray.pop());
-// console.log(myArray);
+console.log(myArray.pop());
+console.log(myArray);
+
+console.log(myArray.splice(0, 1, "HTNNN"));
+console.log(myArray);

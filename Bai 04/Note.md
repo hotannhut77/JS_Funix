@@ -119,7 +119,7 @@ Khai báo hàm gồm có : từ khóa function , tên hàm, tham số truyền v
 
 Lưu ý về đặt lên hàm :
 
-- cũng giống như đặt tên biến đã giới thiệu trước đây, ta chỉ có thể sử dụng : a-z, A-z, 0-9, %, \_ để đặt tên hàm .
+- cũng giống như đặt tên biến đã giới thiệu trước đây, ta chỉ có thể sử dụng : a-z, A-z, 0-9, $, \_ để đặt tên hàm .
 
 - với các số 0 đến 9 thì không dược viết ở đầu tên hàm --> sẽ báo lỗi ngay . Ngoài ra nên đặt tên hàm theo dạng camelCase và tên hàm nên mô tả đúng với chức năng mà hàm sẽ làm để dể đọc dể hiểu code.
 
@@ -365,10 +365,14 @@ console.log(newLength);
   Để xóa bỏ 1 phần tử ở đầu mảng và trả về phần tử bin xóa đi ấy
 
 - Phương thức `indexof`
-  Tra về vị trí của 1 phần tử trong array
+  Trả về vị trí của 1 phần tử trong array, nếu không có phần tử đó trong array thì sẽ return -1
 
 - Phương thứ `includes`
   Trả về true / false : true nếu mảng có chứa phần tử , ngược lại không chứa thì trả về false
+
+- Phương thức `splice` (quan trọng):
+  Dùng để thay thế, xóa các phần tử trong 1 mảng
+  Và trả về mảng các phần tử đã xóa
 
   ## Tổng kết bài học
 
