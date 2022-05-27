@@ -274,7 +274,23 @@ VD:
 
 ### 4. Thao tác với CSS Style
 
-Thông qua DOM, chúng ta cũng có thể code CSS style cho các phần tử mà chúng ta muốn
+Thông qua DOM, chúng ta cũng có thể code CSS style cho các phần tử HTML mà chúng ta muốn
+
+Một số phương thức dùng để chỉnh CSS
+
+- .style.color
+- .style.backgroundColor
+- .style.display
+
+==> Dạng .style.[tên property CSS viết theo dạng campCase ]
+
+VD:
+
+```
+document.body.style.backgroundColor = '#123456';
+```
+
+==> Lưu ý là thuộc tính CSS được thêm bằng JS sẽ thêm vào phần tử dạng inlne style (áp dụng trực tiếp cho phần tử) --> có độ ưu tiên cao thứ 2 chỉ sau cách sử dụng !importance
 
 ### 5. Xử lý sự kiện click (click Events)
 
@@ -285,9 +301,9 @@ Thông qua DOM, chúng ta cũng có thể code CSS style cho các phần tử m�
 
 ==> Có 2 cách chính để bắt và xử lý sự kiện :
 
-1. Cách 1 : DOM Events
+<b>1. Cách 1 : DOM Events </b>
 
-1.1 Thêm Attribute events vào chính thẻ HTML
+<b>1.1 Thêm Attribute events vào chính thẻ HTML</b>
 
 VD:
 
@@ -315,7 +331,105 @@ VD:
 
 ```
 
-1.2 Sử dụng element node để gọi đến attribute events và gán giá trị cho nó
+VD2: sự kiện xóa thú cưng
+code HTML
+
+```
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Type</th>
+      </tr>
+
+      <tbody id="tbody"></tbody>
+    </table>
+
+    <script src="script.js"></script>
+  </body>
+</html>
+
+```
+
+Code js
+
+```
+("use strict");
+
+const pet1 = {
+  id: "P001",
+  name: "Lucky",
+  age: 3,
+  type: "Dog",
+};
+
+const pet2 = {
+  id: "P002",
+  name: "Bông",
+  age: 2,
+  type: "Cat",
+};
+
+const pet3 = {
+  id: "P003",
+  name: "Đen",
+  age: 4,
+  type: "Dog",
+};
+
+const pet4 = {
+  id: "P004",
+  name: "Hoàng thượng",
+  age: 3,
+  type: "Cat",
+};
+
+const petArr = [pet1, pet2, pet3, pet4];
+const tbodyEl = document.getElementById("tbody");
+const tableData = function (arr) {
+  tbodyEl.innerHTML = "";
+  let html = "";
+  for (let i = 0; i < arr.length; i++) {
+    html += `
+	 	<tr>
+		 <td>${arr[i].id}</td>
+		 <td>${arr[i].name}</td>
+		 <td>${arr[i].age}</td>
+		 <td>${arr[i].type}</td>
+		 <td><button onclick = "deletePet(this)">Delete</button></td>
+		</tr>
+	  `;
+  }
+
+  tbodyEl.innerHTML = html;
+};
+
+tableData(petArr);
+
+const deletePet = function (r) {
+  id = r.parentElement.parentElement.children[0].innerHTML;
+  for (let i = 0; i < petArr.length; i++) {
+    if (petArr[i].id === id) {
+      petArr.splice(i, 1);
+      break;
+    }
+  }
+  tableData(petArr);
+};
+
+```
+
+<b>1.2 Sử dụng element node để gọi đến attribute events và gán giá trị cho nó </b>
 
 VD:
 
@@ -344,3 +458,191 @@ VD:
 </html>
 
 ```
+
+2. Sử dụng phương thức addEventListener():
+
+==> Phương thức này nhận vào 2 tham số :
+
+- Thứ nhất là tên sự kiện ,vd :'click','load',...
+- Thứ hai là nhận vào 1 hàm xử lý sự kiện (event handler function) (sẽ tìm hiểu rõ dạng hàm này ở các bài sau )
+
+VD :
+
+```
+("use strict");
+
+const pet1 = {
+  id: "P001",
+  name: "Lucky",
+  age: 3,
+  type: "Dog",
+};
+
+const pet2 = {
+  id: "P002",
+  name: "Bông",
+  age: 2,
+  type: "Cat",
+};
+
+const pet3 = {
+  id: "P003",
+  name: "Đen",
+  age: 4,
+  type: "Dog",
+};
+
+const pet4 = {
+  id: "P004",
+  name: "Hoàng thượng",
+  age: 3,
+  type: "Cat",
+};
+
+const petArr = [pet1, pet2, pet3, pet4];
+const tbodyEl = document.getElementById("tbody");
+const tableData = function (arr) {
+  tbodyEl.innerHTML = "";
+  let html = "";
+  for (let i = 0; i < arr.length; i++) {
+    html += `
+	 	<tr>
+		 <td>${arr[i].id}</td>
+		 <td>${arr[i].name}</td>
+		 <td>${arr[i].age}</td>
+		 <td>${arr[i].type}</td>
+		 <td><button>Delete</button></td>
+		</tr>
+	  `;
+  }
+
+  tbodyEl.innerHTML = html;
+
+  const deleteEls = document.querySelectorAll("button");
+
+  for (let i = 0; i < deleteEls.length; i++) {
+    deleteEls[i].addEventListener("click", function () {
+      const id = deleteEls[i].parentElement.parentElement.children[0].innerHTML;
+      deletePet(id);
+    });
+  }
+
+
+};
+
+tableData(petArr);
+
+function deletePet(id) {
+  for (let i = 0; i < petArr.length; i++) {
+    if (petArr[i].id === id) {
+      petArr.splice(i, 1);
+      break;
+    }
+  }
+  tableData(petArr);
+}
+
+```
+
+VD2 : Một cách khác nữa để xóa thú cưng
+
+```
+("use strict");
+
+const pet1 = {
+  id: "P001",
+  name: "Lucky",
+  age: 3,
+  type: "Dog",
+};
+
+const pet2 = {
+  id: "P002",
+  name: "Bông",
+  age: 2,
+  type: "Cat",
+};
+
+const pet3 = {
+  id: "P003",
+  name: "Đen",
+  age: 4,
+  type: "Dog",
+};
+
+const pet4 = {
+  id: "P004",
+  name: "Hoàng thượng",
+  age: 3,
+  type: "Cat",
+};
+
+const petArr = [pet1, pet2, pet3, pet4];
+const tbodyEl = document.getElementById("tbody");
+
+const tableData = function (arr) {
+  tbodyEl.innerHTML = "";
+  let html = "";
+  for (let i = 0; i < arr.length; i++) {
+    html += `
+	 	<tr>
+		 <td>${arr[i].id}</td>
+		 <td>${arr[i].name}</td>
+		 <td>${arr[i].age}</td>
+		 <td>${arr[i].type}</td>
+		 <td><button class = "btn-delete">Delete</button></td>
+		</tr>
+	  `;
+  }
+
+  tbodyEl.innerHTML = html;
+};
+
+tableData(petArr);
+
+tbodyEl.addEventListener("click", function (e) {
+  if (e.target.className !== "btn-delete") return;
+
+  const isDelete = confirm("Bạn có chắc chắn muốn xóa hay không ?");
+
+  if (isDelete) {
+    const id = e.target.parentElement.parentElement.children[0].innerHTML;
+    deletePet(id);
+  }
+});
+
+function deletePet(id) {
+  for (let i = 0; i < petArr.length; i++) {
+    if (petArr[i].id === id) {
+      petArr.splice(i, 1);
+      break;
+    }
+  }
+  tableData(petArr);
+}
+
+```
+
+## IV. Áp dụng nguyên tác Dry
+
+- Kỹ thuật refactoring (tối ưu lại code) là kỹ thuật tối ưu code loại bỏ các code trùng lặp
+
+- Kỹ thuật refactoring tuân thủ nguyên tắc Dry là Dont Reepeat Code - Không lặp lại code
+
+==> Để tối ưu code : ta xác định các đoạn code có cấu trúc đặc điểm giống nhau hoặc gần giống nhau, sau đó thiết lặp các hàm để tránh trùng lặp code
+
+==> Tại sao chúng ta cần refector code , vì sẽ giúp chúng ta code ngắn gọn, dể sữa đổi, nâng cấp sau này cũng như có cái nhìn khái quát tổng quan dể hiểu code hơn, mang tính module hóa hơn
+
+## V. Tổng kết
+
+==> Bài này là 1 bài rất quan trọng, chúng ta cần phải thực hiện code và thực hành qua các thao tác DOM nhiều lần để nhớ và làm quen với DOM tốt hơn
+
+Trong bài này, chúng ta cần phải nắm chắc các kiến thức sau :
+
+- Nắm được DOM là gì ? Cấu trúc cây DOM như thế nào?
+- Vai trò của DOM, mối quan hệ giữa DOM với JS và trình duyệt web
+- Hiểu và thực hành được một số các thuộc tính , phương thức DOM cơ bản và thông dụng
+- Sử dụng được DOM để tinh chỉnh HTML, CSS cho trang tài liệu HTML
+- Nắm bắt được cách lắng nghe và xử lý sự kiện xảy ra trên các phần tử của cây DOM (tức các element của trang HTML)
+- Áp dụng được nguyên tắc Dry vào quá trình refactor code của chúng ta
+  --> Tìm hiểu project game đoán số (Phần này cũng chính là bài Lab 7 của chúng ta nên mình để dành sang bài Lab 7 chuẩn bị tới đây để mình trình bày cụ thể hơn - nên mới chưa nói trong bài này vội !)
