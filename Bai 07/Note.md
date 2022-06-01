@@ -272,6 +272,39 @@ VD:
 2. textContent
 3. value
 
+VD:
+
+```
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Bài 7<i>(Quan trọng)</i></h1>
+    <label for="name-input">Nhập tên của bạn :</label>
+    <input type="text" id="name-input" placeholder="Nhập tên của bạn vào đây" />
+    <button>Click</button>
+    <script>
+      const h1El = document.querySelector("h1");
+      console.log(h1El.innerHTML);
+      console.log(h1El.textContent);
+
+      const inputEl = document.querySelector("input");
+
+      document.querySelector("button").onclick = function () {
+        console.log(inputEl.value);
+      };
+    </script>
+  </body>
+</html>
+
+
+```
+
 ### 4. Thao tác với CSS Style
 
 Thông qua DOM, chúng ta cũng có thể code CSS style cho các phần tử HTML mà chúng ta muốn
@@ -459,7 +492,7 @@ VD:
 
 ```
 
-2. Sử dụng phương thức addEventListener():
+<b>2. Sử dụng phương thức addEventListener(): </b>
 
 ==> Phương thức này nhận vào 2 tham số :
 

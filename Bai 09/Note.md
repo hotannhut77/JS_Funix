@@ -12,24 +12,51 @@ Trong bài học nỳ, chúng ta sẽ xem xét "hậu trường" của JS và t�
 
 ==> Tóm lại là JS có 8 đặc định sau, chúng ta sẽ đi chi tiết vào 8 đặc điểm đó ngay sau đây :
 
-1. JS là ngôn ngữ lập trình bậc cao (High Level)
+### 1. JS là ngôn ngữ lập trình bậc cao (High Level)
 
 - Mọi chương trình chạy trên máy tính đều cần một số tài nguyên phần cứng, chẳng hạn như bộ nhớ và CPU. Các ngôn ngữ cấp thấp, chẳng hạn như C thì chũng ta phải yêu cầu máy tính cung cấp bộ nhớ để tạo một biến mới. Mặt khác , các ngôn ngữ cấp cao như JS, Python, chúng ta không phải quản lý tài nguyên vì những ngôn ngữ nanyf có các phần `trừu tượng` được gọi và loại bỏ tất cả các công việc đó khỏi chúng ta. Điều này làm cho ngôn ngữ bặc cao dể học và dễ sử dụng hơn, nhưng nhược điểm là các chương trình bậc cao sẽ không bao giờ nhanh như chương trình C (C rất nhanh nhé , thậm chí nếu chúng ta viết bằng ngôn ngữ Assembly thì càng nhanh hơn nữa :v)
 
-2. Có cơ chế quản lý bộ nhớ (garbage collected)
+### 2. Có cơ chế quản lý bộ nhớ (garbage collected)
 
 - Cơ chế quản lý bộ nhớ là một THUẬT TOÁN bên trong công cụ JS tự động loại bỏ các đối tượng cũ, đối tượng lâu không sử dụng khỏi bộ nhớ máy tính. Nó giống như một công cụ dọn dẹp, dọn sạch bộ nhớ theo thời gian
+  VD : đơn giản sau :
 
-3. Cơ chế thông dịch hoặc biên dịch Just In Time
-4. Ngôn ngữ đa mô hình (multi-paridigm)
-5. Ngôn ngữ hướng đối ượng dựa trên nguyên mẫu (prototype)
+Ta có 1 đối tượng user như sau, biến user này sẽ tha chiếu đối đối tượng như hình
+
+<img height= "350px" src = "./imgs/hinh1.png">
+
+Sau đó, ta ghi đè (gán lại biến user bằng null) thì tham chiếu đến đối tượng ban đầu sẽ mất đi, lúc này, JS sẽ hiểu là đối tượng này không còn được sử dụng nữa nên nó sẽ dọn dẹp và xóa đối tượng này ra khỏi bộ nhớ !
+
+<img height = "350px" src = "./imgs/hinh2.png">
+
+### 3. Cơ chế thông dịch hoặc biên dịch Just In Time
+
+- Cơ chế thông dịch hoặc biên dịch JIT (biên dịch trong khi chạy): Bộ xử lý của máy tính chỉ có thể hiểu 0 và 1. Vì vậy mọi chương trình cần được viết bằng 0, 1 hay còn gọi là mã máy (machine code). Với ngôn ngữ lập trình, cụ thể là Javascript, code được viết ra để con người có thể hiểu được nên nó là một sự trìu tượng hóa dựa trên mã máy. Tuy nhiên code Javascript vẫn phải được dịch sang mã máy để máy có thể hiểu được, quá trình này gọi là thông dịch hoặc biên dịch.
+
+### 4. Ngôn ngữ đa mô hình (multi-paridigm)
+
+Hiện nay có 3 mô hình lập trình phổ biến sau, và JS cũng có cả 3 loại mô hình này , đó là :
+
+- Lập trình thủ tục - Procedural programing: Sắp xếp code một cách tuyến tính, từ trên xuống dưới
+
+- Lập trình hướng đối tượng - Object oriented programing OOP
+
+- Lập trình hướng hàm - Functional Programing
+
+### 5. Ngôn ngữ hướng đối ượng dựa trên nguyên mẫu (prototype)
 
 - Hầu hết mọi thứ trong JS đều là đối tượng ngoại trừ các giá trị nguyên thủy
 - VD: mảng cũng là 1 đối tượng, nên chúng có các phương thức như push, pop,.. các phương thức này là do kế thừa theo prototype. Prototype giống như một template (mẫu), Array.prototype chứa tất cả các phương thức của mảng
 
-6. Ngôn ngữ với các hàm first-class
-7. Ngôn ngữ có tính động
-8. Ngôn ngữ ĐƠN LUỒNG và mô hình đồng thời event loop & non-blocking
+### 6. Ngôn ngữ với các hàm first-class
+
+- Các hàm first-class là các hàm được coi như là một biết thông thường, ta có thể truyền hàm vào hàm khác, trả về hàm từ các hàm, ... Nó là một tính năng mạnh mẽ để thực hiện các kỹ thuật phức tạp và được sử dụng trong paradirm lập trình hàm.
+
+### 7. Ngôn ngữ có tính động
+
+- Tính dynamic ở đây thực ra là dynamic-typed (cho phép thay đổi kiểu biến tùy biến), trong Javascript chúng ta không chỉ định được kiểu dữ liệu cho các biến, thay vào đó chúng chỉ được chỉ định khi JS thực thi code. Ngoài ra kiểu dữ kiệu cũng dễ dàng thay đổi khi chúng ta gán lại dữ liệu.
+
+### 8. Ngôn ngữ ĐƠN LUỒNG và mô hình đồng thời event loop & non-blocking
 
 - JS là ngôn ngữ lập trình đơn luồng, có nghĩa là chúng chỉ có thể làm từng việc một nên chúng cần có mô hình đồng thời .
 - Mô hình đồng thời là cách mà công cụ JS xử lý nhiều tác vụ cùng một lúc
@@ -46,19 +73,45 @@ VD:
 ### 1. Định nghĩa JS Engine
 
 - JS engine là 1 chương trình máy tính thực thi code JS
-- Mỗi trình duyeeth hiện nay đều có JS Engine , công cụ được biết đến nhiều nhất là Google V8
+- Mỗi trình duyệt hiện nay đều có JS Engine , công cụ được biết đến nhiều nhất là Google V8
+- Ngoài ra, JS Engine còn được áp dụng để lập trình server với Node.js runtime system.
+
+<img src = "https://codecute.com/wp-content/uploads/2019/04/javascript-engine-2.png">
 
 ### 2. Cấu trúc của JS Engine
 
+<img src = "./imgs/hinh3.png">
+
 - Bất kỳ JS engine nào cũng chứa call stack và heap
+
 - Call stack là nơi code được thực thi bằng cách sử dụng Execution Context (EC)- mình sẽ nói rõ chi tiết hơn về EC sau
+
 - Heap là một vùng nhớ không có cấu trúc, lưu trữ tất cả các đối tượng (Object) mà ứng dụng cần
 
 ### 3. Phân biệt giữa thông dịch và biên dịch
 
-### 4. JS kết ==>
+- Trong quá trình biên dịch, toàn bộ code được chuyển đổi thành mã máy cũng một lúc, sau đó mã máy này được viết thành một file di động có thể thực thi trên bất kỳ máy tính nào
 
-### 4. trình biên dịch ...
+- Quá trình thông dịch chạy code và thực hiện từng dòng một, code được đọc và thực thi tất cả cùng một lúc. Code javascript vẫn được chuyển sang mã máy nhưng sau đó được thực thi luôn
+
+==> `JS thì kết hợp cả thông dịch và biên dịch`
+
+- JS đã từng là một ngôn ngữ thông dịch thuần túy nhưng vấn đề của trình thông dịch là chúng chậm hơn nhiều lần so với biên dịch, với web hiện đại ngày nay điều đó không được chấp nhận nữa. JS ngày nay kết hợp vừa thông dịch vừa biên dịch được gọi là Just In time compilation
+
+- JIT compiler hiểu cơ bản là biên dịch toàn bộ code thành mã máy cùng một lúc sau đó thực thi nó ngay lập tức. Điều này khiến JS thực thi nhanh hơn so với thông dịch trước đây
+
+==> `Cách hoạt động của trình biên dịch just-in-time`
+
+<img src = "./imgs/hinh4.png">
+1. Phân tích cú pháp (Pharsing): Khi một đoạn code JS đi vào JS Engine code sẽ được phân tích thành một cấu trúc dữ liệu được gọi là cây cú pháp trừu tượng (Abstract Syntax Tree), bước này cũng kiểm tra xem code có lỗi cú pháp nào không. Cây kết quả sẽ được sử dụng để tạo Mã máy
+
+Lưu ý: Cây cú pháp trừu tượng không liên quan gì đến cây DOM
+
+2. Biên dịch (Compilation) lấy AST được tạo ra và biên dịch nó thành mã máy
+
+3. Thực thi mã máy (Execution), việc thực thi diễn ra trong Call Stack
+
+Sau bước 3 JS Engine đã tạo một phiên bản đầu tiên, sau đó JS Engine thực hiện thêm một số chiến lược tối ưu hóa thực hiện trong background và biên dịch lại trong quá trình thực thi chương trình đã chạy.
 
 ### 4. JS Runtime
 

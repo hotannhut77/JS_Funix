@@ -7,16 +7,38 @@
     <title>Document</title>
   </head>
   <body>
-    <button id="btn">Click here !!!</button>
+    <h1>XIN CHÀO MỌI NGƯỜI 1</h1>
+    <h1 id="heading2">XIN CHÀO MỌI NGƯỜI 2</h1>
+
+    <h1 class="header">XIN CHÀO MỌI NGƯỜI 3</h1>
+    <h1 class="header">XIN CHÀO MỌI NGƯỜI 4</h1>
+    <h1 class="header">XIN CHÀO MỌI NGƯỜI 5</h1>
 
     <script>
       "use strict";
 
-      const btnEl = document.getElementById("btn");
+      const h1El = document.querySelector("h1");
+      console.log(h1El);
 
-      btnEl.onclick = function () {
-        alert("Xin chào mọi người , tôi là HTN !");
-      };
+      const h1El2 = document.querySelector("#heading2");
+
+      console.log(h1El2);
+
+      const h1El3 = document.getElementsByClassName("header");
+      console.log(h1El3);
+
+      h1El.addEventListener("click", function () {
+        // code
+      });
+
+      function myFunc() {
+        h1El.style.color = "red";
+        alert("OK, hàm này sẽ chạy khi click vào h1 !");
+        console.log("Done");
+      }
+
+      // từ 1 node nào đó ==> tìm đến các phần tử con của nó
+      /// từ 1 nào đó --> tìm đến các phần tử anh em của nó
     </script>
   </body>
 </html>
