@@ -115,13 +115,14 @@ Sau bước 3 JS Engine đã tạo một phiên bản đầu tiên, sau đó JS 
 
 ### 4. JS Runtime
 
-Về cơ bản nôm na, JS Runtime trong trình duyệt như một hợp, thùng chứa lớn chứa tất cả những thứ cần thiết để sử dụng JS, bao gồm:
+Về cơ bản nôm na, JS Runtime trong trình duyệt như một hộp, thùng chứa lớn chứa tất cả những thứ cần thiết để sử dụng JS, bao gồm:
 
 - JS Engine
 - WEB APIs
-- Call back Queue
+- Callback Queue
 
-<imt src = "http://thaunguyen.com/blog/wp-content/uploads/2018/06/eventloop.png">
+<img src = "http://thaunguyen.com/blog/wp-content/uploads/2018/06/eventloop.png">
+
 ==> Trọng tâm nhất vẫn là JS Engine (chúng ta đã tìm hiểu ở trên)
 ==> Về WEB APIs
 
@@ -212,6 +213,114 @@ while (i < 100000) {
 
 Phần này chúng ta sẽ học để hiểu rõ chi tiết về cách 1 chương trình JS (code của chúng ta) chạy ra sao, đặc biệt là call stack mình nói ở bên trên nó hoạt động thế nào nhé !
 
+### 1. Quá trình thực thi chi tiết của 1 chương trình JS
+
+Sau khi quá trình trình BIÊN DỊCH hoàn tất, mã máy được đưa vào quá trình thực thi , các bước tổng quát , cơ bản như sau (cũng như ví dụ mình nói bên trên thôi !)
+
+1. Tạo ra global excecution context (EC) (ngữ cảnh thực thi toàn cục) - dành cho những code thuộc top-level (code thuộc top-level là những code không nằm trong bất kỳ function nào)
+
+- Execute context là ngữ cảnh thực thi, định nghĩa là môi trường thực thi đoạn code JS, ===> nó giống như một chiếc hộp lưu giữ tất cả các thông tin cần thiết để code được thực thi , như là : các biến cục bộ hay các đối số truyền vào
+
+VD:
+
+```
+
+```
+
+- Code JS luôn chạy trong một EC
+- Trong bất kỳ dự án JS nào cũng chỉ có duy nhất 1 global EC là context mặc định để thực thi các code thuộc top level
+
+2. Sau khi tạo ra global EC, thì nó sẽ tiến hành thực thi code trong EC này, tức là thực thi các dòng code top level ấy !
+
+3. Sau đó nếu gặp các hàm thì nó sẽ thực thi các hàm (lưu ý khi gặp 1 lời gọi hàm nó sẽ tạo ra 1 EC cục bộ cho hàm ấy và sau đó thực thi code trong hàm ấy), hoặc nó sẽ thực thi các đoạn code bất đồng bộ hay chờ thwucj thi các sự kiện (hay còn gọi là chờ callback đưa lên call stack thông qua event loop để call stack có thể thực thi các dòng code bên trong callback ấy)
+
+- Lưu ý như trên: Khi 1 hàm được gọi sẽ có 1 EC được tạo ra (và lưu ý là sẽ khác nhau ở từng lần gọi nhá , cho dùng là gọi chung 1 hàm ! Sau này mình sẽ ví dụ và nói sâu hơn ở các bài sau !)
+- Các EC này kết hợp với nhau tạo thành các call back ????
+
+### 2. Tìm hiểu sâu hơn , bên trong ngữ cảnh thực thi (Execution Context)
+
+Bên trong EC bao gồm :
+
+1. Variable Environment chứa các biến, khai báo hàm và cũng có 1 đối tượng (object) argument đặc biệt (chứa tất cả các đối số được truyền vào hàm thuộc về EC hiện tại --> EC hiện tại ? Why ? --> ý muốn nói mỗi lần gọi khác nhau sẽ có môi trường biến khác nhau ấy --> do đó mà mình nói mỗi lần gọi hàm sẽ sinh ra những EC khác nhau đó !)
+
+2. Scope Chain bao gồm các tham chiếu đến các biến nằm ngoài hàm hiện tại (chúng ta sẽ tìm hiểu nó sau !)
+
+3. Từ khóa this (cũng sẽ tìm hiểu ở bài sau)
+
+LƯU Ý : EC của hàm mũi tên sẽ không lấy được arguments và cũng không có this
+
+VD: có thể hình dung thế này, trước khi thực thi 1 function , JS sẽ tạo ra 1 EC Object, để scan toàn bộ function đó và tạo ra các biến để lưu trữ thông tin môi trường thực thi code của chúng ta, trong đó có : Variable Environment (đại diển bởi đối tượng variableObject trong đoạn code dưới đây), Scope Chain và this
+
+```
+executionContextObj = {
+    'scopeChain': { /* variableObject + all parent execution context's variableObject */ },
+    'variableObject': { /* function arguments / parameters, inner variable and function declarations */ },
+    'this': {}
+}
+```
+
+==> `giải thích chi tiết hơn như sau :`
+
+Khi JS gặp 1 đoạn code gọi hàm thì :
+
+1. Trước khi thực thi đoạn code trong hàm ấy, nó sẽ tạo ra 1 `execution context`, EC này có gì :
+
+- Khởi tạo Scope Chain
+- Tạo VO(Variable Object)
+- Scan toàn bộ tham số, biến, gán tên và giá trị cho chúng
+- Scan context của các function tìm thấy trong đó, với mỗi function tìm thấy, tạo một key trong VO trùng với tên function, và trỏ vào function đó trong bộ nhớ(nếu bị trùng sẽ ghi đè)
+- Scan context của các khai báo biến trong đó , tạo key trong VO
+- Xác định giá trị của this
+
+2. Sau đó sẽ thực thi code (chạy function) - tại call stack
+
+VD:
+
+```
+function foo(i) {
+    var a = 'hello';
+    var b = function privateB() {
+
+    };
+    function c() {
+
+    }
+}
+
+foo(22);
+```
+
+Khi hàm foo(22) được gọi thì sẽ tiến thành các bước sau:
+
+bước 1: khởi tạo ra 1 EC object
+
+```
+fooExecutionContext = {
+    scopeChain: { ... },
+    variableObject: {
+        arguments: {
+            0: 22,
+            length: 1
+        },
+        i: 22,
+        c: pointer to function c()
+        a: 'hello',
+        b: pointer to function privateB()
+    },
+    this: { ... }
+}
+```
+
+bước 2: code sẽ được thực thi
+
+Ta thấy, hàm `c` được khai báo sau, nhưng nó luôn được đưa lên đầu --> chính là hoisting do đó mà ta có thể sử dụng hàm trước khi khai báo
+
+==> `Call Stack vs EC ??`
+
+- Call satck là nơi các EC xếp chồng lên nhau, EC ở trên cùng của stack là thứ hiện đang chạy (đang được thực thí code) và khi chạy xong nó sẽ bị xóa khỏi stack (tứ EC - ngữ cảnh thực thi sẽ bị xóa - và toàn bộ những gì bên trong EC cũng sẽ bị xóa đi 1 cách không thương tiết :v)
+
+- Việc thực thi diễn ra theo nguyên lý của stack - LIFO - Last In First Out
+
 VD: đoạn code sau sẽ thực thi ra sao ?
 
 ```
@@ -249,62 +358,6 @@ first();
 
 ==> Mọi người đã có được cái nhìn tổng thể về call stack hoạt động thế nào chưa ?? Thử 1 vài ví dụ và tự phân tích chúng ta sẽ hiểu ngay thôi !
 
-Ta đi vào chi tiết hơn về từng thành phần EC là gì ? EC có những gì , vâng vâng !
-
-### 1. Quá trình thực thi chi tiết của 1 chương trình JS
-
-Sau khi quá trình trình BIÊN DỊCH hoàn tất, mã máy được đưa vào quá trình thực thi , các bước tổng quát , cơ bản như sau (cũng như ví dụ mình nói bên trên thôi !)
-
-1. Tạo ra global excecution context (EC) (ngữ cảnh thực thi toàn cục) - dành cho những code thuộc top-level (code thuộc top-level là những code không nằm trong bất kỳ function nào)
-
-- Execute context là ngữ cảnh thực thi, định nghĩa là môi trường thực thi đoạn code JS, ===> nó giống như một chiếc hộp lưu giữ tất cả các thông tin cần thiết để code được thực thi , như là : các biến cục bộ hay các đối số truyền vào
-
-VD:
-
-```
-
-```
-
-- Code JS luôn chạy trong một EC
-- Trong bất kỳ dự án JS nào cũng chỉ có duy nhất 1 global EC là context mặc định để thực thi các code thuộc top level
-
-2. Sau khi tạo ra global EC, thì nó sẽ tiến hành thực thi code trong EC này, tức là thực thi các dòng code top level ấy !
-
-3. Sau đó nếu gặp các hàm thì nó sẽ thực thi các hàm (lưu ý khi gặp 1 lời gọi hàm nó sẽ tạo ra 1 EC cục bộ cho hàm ấy và sau đó thực thi code trong hàm ấy), hoặc nó sẽ thực thi các đoạn code bất đồng bộ hay chờ thwucj thi các sự kiện (hay còn gọi là chờ callback đưa lên call stack thông qua event loop để call stack có thể thực thi các dòng code bên trong callback ấy)
-
-- Lưu ý như trên: Khi 1 hàm được gọi sẽ có 1 EC được tạo ra (và lưu ý là sẽ khác nhau ở từng lần gọi nhá , cho dùng là gọi chung 1 hàm ! Sau này mình sẽ ví dụ và nói sâu hơn ở các bài sau !)
-- Các EC này kết hợp với nhau tạo thành các call back ????
-
-### 2. Tìm hiểu sâu hơn , bên trong ngữ cảnh thực thi (Execution Context)
-
-Bên trong EC bao gồm :
-
-1. Variable Environment chứa các biến, khai báo hàm và cũng có 1 đối tượng (object) argument đặc biệt (chứa tất cả các đối số được truyền vào hàm thuộc về EC hiện tại --> EC hiện tại ? Why ? --> ý muốn nói mỗi lần gọi khác nhau sẽ có môi trường biến khác nhau ấy --> do đó mà mình nói mỗi lần gọi hàm sẽ sinh ra những EC khác nhau đó !)
-
-2. Scope Chain bao gồm các tham chiếu đến các biến nằm ngoài hàm hiện tại (chúng ta sẽ tìm hiểu nó sau !)
-
-3. Từ khóa this (cũng sẽ tìm hiểu ở bài sau)
-
-LƯU Ý : EC của hàm mũi tên sẽ không lấy được arguments và cũng không có this
-
-VD:
-
-```
-viết 1 ví dụ
-```
-
-==> Call Stack vs EC ??
-
-- Call satck là nơi các EC xếp chồng lên nhau, EC ở trên cùng của stack là thứu hiện đang chạy (đang được thực thí code) và khi chạy xong nó sẽ bị xóa khỏi stack (tứ EC - ngữ cảnh thực thi sẽ bị xóa - và toàn bộ những gì bên trong EC cũng sẽ bị xóa đi 1 cách không thương tiết :v)
-
-- Việc thực thi diễn ra theo nguyên lý của stack - LIFO - Last In First Out
-
-VD :
-
-```
-Viết 1 ví dụ !
-```
-
 ## IV. Scope và Scope Chain
 
 ### 1. Các khái niệm về scope
@@ -316,3 +369,104 @@ Viết 1 ví dụ !
 - Scope là không gian hoặc môi trường khai báo một biến nhất định.
 
 - Sope của một biến là toàn bộ khu vực code có thể truy cập vào biến đó.
+
+### 2. Ba dạng scope trong JS
+
+Trong JS có 3 loại scope : global scope, function scope và block scope:
+
+- Global Scope là các top-level code, các biến được khai báo bên ngoài bất kỳ hàm hoặc khối nào. Các biến này có thể được truy cập ở mọi nơi trong chương trình.
+
+- Function Scope: mỗi một hàm đều tạo một scope và các biến khai báo bên trong phạm vi của hàm đó chỉ có thể được truy cập bên trong hàm. Đây còn được gọi là local scope.
+
+- Block Scope: Từ ES6, các khối block cũng tạo ra một scope, code block tất cả mọi thứ nằm trong dấu ngoặc nhọn {} (ví dụ: khối lệnh if, vòng lặp for). Giống function scope, tất cả các biến được khai báo trong block chỉ có thể được truy cập bên trong block đó, không thế truy cập từ bên ngoài.
+
+==> `Lưu ý` :
+
+- Có 1 khác biệt nhỏ giữa function scope và block scope là block scope chỉ áp dụng cho các biến được khai báo bằng let, const và var là function scope.
+
+- Ngoài ra, tất cả các scope đều có quyền truy cập vào các biến từ các scope bên ngoài của chúng.
+
+VD:
+
+```
+const a = 10;
+
+function func1() {
+  var b = 20;
+  console.log("func1 : " + (a + b));
+  function func2() {
+    console.log("func2 : " + a);
+  }
+
+  func2();
+}
+
+func1();
+
+// console.log(b);
+// func2();
+
+```
+
+### 3. Scope chain
+
+- Nếu scope cần sử dụng một biến nào đó mà không tìm thấy trong scope hiện tại nó sẽ tra cứu trong scope chain để tìm xem liệu có tìm thấy biến đó từ một trong các parent scope không. Nếu có biến đó sẽ được sử dụng, nếu không tìm thấy nó sẽ báo lỗi. Quá trình này gọi là Tra cứu biến.
+
+VD:
+
+```
+function myFunc(num) {
+  const res = num * num;
+  console.log(message);
+  console.log(res);
+
+  function display() {
+    const message = `Kết quả bình phương của ${num} là : `;
+    console.log(message + res);
+  }
+
+  display();
+}
+
+let message = "Hàm này sẽ tiến hành tính bình phương của 1 số";
+myFunc(10);
+
+```
+
+### 4. Mối liên hệ giữa CallStack ,EC , variable enviroment và scope
+
+- Call stack chứa các execution context, mỗi execution context đại điện cho mỗi hàm đúng theo thứ tự mà chúng được gọi.
+
+- Execution context bao gồm môi trường biến.
+
+- Các biến có sẵn trong Global Scope chính xác là các biến được lưu trữ trong môi trường biến của Global Execution Context.
+
+- Các biến có trong các function scope cũng là các biến được lưu trữ trong môi trường biến của Excecution Context của từng hàm.
+
+- Scope chain đóng vai trò để các function scope có quyền truy cập vào các parent scope của nó.
+
+- Scope chain không liên quan đến thứ tụ hàm được gọi nó chỉ liên quan đến vị trí của hàm trong code.
+
+- Nói cách khác scope chain không liên quan gì đến thứ tự của execution context trong call stack.
+
+- Scope chain của một scope tương đương với việc cộng tất cả các môi trường biến của tất cả các parent scope lại với nhau.
+
+==> `TÓM LẠI CẦN NHỚ :`
+
+1. Scope là gì ? Scope cơ bản làm phạm vi hoạt động của biến, chúng tồn tại ở đâu, ở đâu có thể truy cập được chúng.
+2. Có 3 loại scope trong JS: global scope, function scope, block scope : trong đó khai báo bằng let, const thì thuộc blcok scope , còn function scope thì áp dụng cho cả let const và var
+3. Mỗi scope luôn có quyền truy cập vào tất cả các biến từ tất cả các scope bên ngoài - hay còn gọi là scope chain. Nhưng lưu lý là các scope bên ngoài không thể truy cập (không thể nhìn thấy các biến thuộc scope bên trong)
+4. Khi truy cập 1 biến ở 1 scope bên trong , JS engine sẽ tiến hành tra cứu trong scope chain theo thứ tự từ trong ra ngoài (ưu tiên bên trong trước)
+5. Scope chain tương đương với việc cộng tất cả môi trường biến của tất cả các parent scope và môi trường biến của chính nó
+6. Scope chain không liên quan gì đến thứu tự các hàm được gọi, nó chỉ liên quan mật thiết đến thứ tự code mà chúng ta viết
+7. EC thì lại liên quan mật thiết đến thứ tự mà các hàm được gọi
+
+## V. Tổng kết
+
+Trong bài học này, chúng ta đã học được các kiến thức sau:
+
+- Làm rõ khái niệm và các đặc điểm nổi bật của ngôn ngữ Javascript
+- Phân biệt thông dịch và biên dịch
+- Khái niệm JS Runtime, JS Engine, Call Stack, Event loop, - Execution Context để hiểu cách thực thi của một chương trình Javascript.
+- Thứ tự sắp xếp và cách thứcthực thi các block thông qua scope và scope chain. (cần nắm chắc)
+- Định nghĩa về scope, các dạng scope và các vấn đề về scope trong code. (cần nắm chắc)
