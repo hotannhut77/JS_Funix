@@ -89,11 +89,9 @@ myFunc(getSum);
 function counter() {
   let count = 0;
 
-  const tang = function () {
+  return function () {
     console.log(++count);
   };
-
-  return tang;
 }
 
 const func = counter();
@@ -155,7 +153,7 @@ B(A2);
 
 - Tạo ra sự trừu tượng, ẩn chi tiết của một số code được thực thi bởi vì chúng ta không thực sự quan tâm đến những chi tiết đó.
 
-VD: hàm addEventListener(): có callback truyền vào sẽ được thực thi (tức hàm addEventListener này gọi bên trong code của nó để thực thi khi sự kiện xảy ra ==> Nhưng chúng ta có cần biết bên trong hàm addEventListener này nó thực hiện cái j và code ra sao không ? ==> Không cần đúng không ? đó là tiêu biểu cho việc trừu tượng và ẩn chi tiết của một số code được thực thị khi chúng ta không cần thực sự quan tâm đến những chi tiết ấy).
+VD: hàm addEventListener(): có callback truyền vào sẽ được thực thi (tức hàm addEventListener này gọi bên trong code của nó để thực thi khi sự kiện xảy ra ==> Nhưng chúng ta có cần biết bên trong hàm addEventListener này nó thực hiện cái gì và code ra sao không ? ==> Không cần đúng không ? đó là tiêu biểu cho việc trừu tượng và ẩn chi tiết của một số code được thực thị khi chúng ta không cần thực sự quan tâm đến những chi tiết ấy).
 
 ```
 const h1EL = document.querySelector("h1");
@@ -407,6 +405,36 @@ VD:
 - Bất kỳ hàm nào cũng luôn có quyền truy cập vào môi trường biến của execution context nơi mà hàm đó được tạo, ngay cả sau khi execution context đó đã biến mất. Kết nối này được gọi là closure.
 
 - Closure về cơ bản là variable environment gắn liền với hàm, tại thời gian và địa điểm nơi hàm được tạo. Có thể nói dễ hiêu hơn: nhớ closure một hàm sẽ không bị mất kết nối với các biển tồn tại tại nơi sinh ra của hàm, ngay cả khi hàm sinh ra nó đã return
+
+TÓM LẠI: cần nhớ đơn giản như sau
+
+Closure làm cho 1 hàm có thể ghi nhớ phạm vi nơi nó được tạo ra và truy cập được biến ở bên ngoài phạm vi của nó !!!
+
+==> Hàm closures có thể truy cập tới biến của hàm chứa nó, dù cho hàm đó đã return (Biến được tham chiếu nhờ closure sẽ không được xóa khỏi bộ nhớ khi hàm cha thực thi xong)
+
+VD:
+
+```
+function makeCounter() {
+  // ban đầu counter bằng 0
+  let count = 0;
+
+  // trả về một hàm khác
+  // hàm này tăng counter lên 1 đơn vị và sau đó return về counter
+  return function () {
+    return ++count;
+  };
+}
+
+// sử dụng -> counter chính là nested function
+let counter1 = makeCounter();
+
+// sau mỗi lần gọi hàm counter1() thì giá trị count tăng lên 1
+console.log(counter1()); // 1
+console.log(counter1()); // 2
+console.log(counter1()); // 3
+
+```
 
 ## IX. Tổng kết
 

@@ -12,6 +12,7 @@ Tiếp theo bài 9, trong bài học này chúng ta sẽ tìm hiểu 2 vấn đ�
 ### 1. Định nghĩa `this`
 
 - Biến this là một biến đặc biệt được tạo trong mọi ngữ cảnh thực thi (Execution Context) và cho mọi function nào.
+  --> `this` đại diện cho 1 đối tượng (Object). Đối tượng đó là chủ sở hữu của ngữ cảnh (hay nói cơ bản hơn là chủ của code đang được chạy)
 
 - This trỏ tới giá trị của `chủ sở hữu` của hàm nơi mà this được gọi.
 
@@ -19,9 +20,9 @@ Tiếp theo bài 9, trong bài học này chúng ta sẽ tìm hiểu 2 vấn đ�
 
 ### 2. Cách sử dụng `this` trong các hàm
 
-<b>Có 4 kiểu hàm :</b>
+<b>Có 4 cách :</b>
 
-1. Hàm là một phương thức của một đối tượng: Khi gọi this thì giá trị của this sẽ trỏ đến đối tượng mà phương thức của đối tượng đó được gọi.
+1. Hàm là một phương thức của một đối tượng: Khi gọi this thì giá trị của this sẽ trỏ đến đối tượng gọi phương thức
 
 VD:
 
@@ -54,6 +55,7 @@ myFunc();
 ```
 
 3. Hàm là một arrow function (lexical this). Biến this sẽ có giá trị là giá trị của `hàm bao bên ngoài nó`, hàm parent.
+   ==> Giải thích thêm : vì sao? Ta nhớ là hàm mũi tên không có từ khóa this , do đó khi dùng this bên trong hàm mũi tên nó chỉ đơn giản là tìm ra bên ngoài để lấy giá trị this(biến this) từ các phạm vi bên ngoài . Do đó nó sẽ có giá trị của hàm parent (hàm bao nó, gần nhất)
 
 VD:
 
@@ -91,9 +93,19 @@ HTN.getInfo();
 
 ```
 
-4. Hàm là một Event Listener, từ khóa this sẽ luôn trỏ đến phần tử DOM mà hàm xử lý được gắn vào.
+4. Hàm là một Event Listener, từ khóa this sẽ LUÔN LUÔN trỏ đến phần tử DOM mà hàm xử lý được gắn vào.
 
 ```
+const HTN = {
+  name: "Hồ Tấn Nhựt",
+  age: 24,
+
+  getInfo: function () {
+    console.log(this);
+    console.log(`Tôi tên là : ${this.name}, năm nay tôi ${this.age} `);
+  },
+};
+
 const h1El = document.querySelector("h1");
 // h1El.addEventListener("click", function () {
 //   console.log(this);
@@ -114,7 +126,7 @@ const h1El = document.querySelector("h1");
 Ngoài ra, this còn có những cách sử dụng khác khi kết hợp call , new, apply, bind,.. (sẽ được trình bày ở các phần sau)
 
 ==> `Tóm lại : `Cần lưu ý là `this` không phải trỏ đến hàm của chúng ta, mà nó trỏ đến `chủ sở hữu của hàm`, nên để xác định this sẽ là gì, thì cần xác định chủ sở hữu của hàm khi hàm `được gọi` .
-==> Thứ 2 là, trong hàm mũi tên, sẽ không có this, (cũng giống như 1 biến nào đó không có trong scope của hàm, thì khi truy cập đến biến đo, nó sẽ tìm trong scope chain của mình để tìm đến biến đó có ở bên ngoài không, nếu có thì nó dùng biến đó --> thì trong trường hợp này cũng vậy, hàm mũi tên không có từ khóa this của riêng nó, do đó nó sẽ tìm ra bên ngoài để lấy giá trị this của hàm chứa nó gần nhất hoặc của đối tượng window).
+==> Thứ 2 là, trong hàm mũi tên, sẽ không có this, (cũng giống như 1 biến nào đó không có trong scope của hàm, thì khi truy cập đến biến đó, nó sẽ tìm trong scope chain (chuỗi phạm vi) của mình để tìm đến biến đó có ở bên ngoài không, nếu có thì nó dùng biến đó --> thì trong trường hợp này cũng vậy, hàm mũi tên không có từ khóa this của riêng nó, do đó nó sẽ tìm ra bên ngoài để lấy giá trị this của hàm chứa nó gần nhất hoặc của đối tượng window).
 
 VD: 1 ứng dụng đơn giản của hàm mũi tên
 
@@ -342,7 +354,7 @@ getSum();
 
 ## III. Dữ liệu nguyên thủy và Object (kiểu nguyên thủy và kiểu tham chiếu)
 
-Đặt câu hỏi ? Giữa 2 dạng dữ liệu này khác nhau ở đâu về cách lưu trữ, và ở thao tác gán giá trị??
+Đặt câu hỏi ? Giữa 2 dạng dữ liệu này khác nhau ở đâu về cách lưu trữ, và ở thao tác cập nhật giá trị??
 
 VD: Tại sao lại có sự khác nhau ?
 

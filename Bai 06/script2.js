@@ -28,7 +28,8 @@ const pet4 = {
   type: "Cat",
 };
 
-const petArr = [pet1, pet2, pet3, pet4];
+const petArr = [pet1, pet2, pet3, pet4]; // tương ứng là ta đã thwucj hiện được tính năng thêm thú cưng khi nhập ;
+
 const tbodyEl = document.getElementById("tbody");
 
 const tableData = function (arr) {
