@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Ví dụ về Fetch</h1>
+
+    <script>
+      const myResponse = fetch("https://geocode.xyz/52.508,13.381?geoit=json");
+      // fetch sẽ trả về cho ta 1 promise
+      // console.log(myResponse);
+
+      // để sử lý các trạng thái ta sẽ dùng các phương thức của promise
+
+      myResponse
+        .then((res) => {
+          // console.log(res.json());
+          // phương thức .json sẽ trả về 1 promise và ở trạng thái thành công
+          // nó sẽ trả về kết quả là data ta mong muốn
+
+          return res.json(); //
+        }) //==> trả về promise
+        .then((data) => {
+          console.log(data);
+          throw new Error("BỊ LỖI RỒI !");
+          console.log(data.country, data.state);
+        }) //==> trả về 1 promisse
+        .catch((err) => console.error(err.message))
+        .then()
+        .catch()
+        .finally();
+    </script>
+  </body>
+</html>
